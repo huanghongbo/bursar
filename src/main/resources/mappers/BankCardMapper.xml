@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siqisoft.bursar.bankcard.mapper.BankCardMapper">
+
+	<insert id="insert" parameterType="com.siqisoft.bursar.bankcard.model.BankCard"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO bank_card (
+
+		code ,
+
+		name ,
+
+		sex ,
+
+		id_card_number ,
+
+		bank_card_number,
+		
+		remark
+
+		) VALUES (
+
+		#{code ,jdbcType=VARCHAR} ,
+
+		#{name ,jdbcType=VARCHAR} ,
+
+		#{sex ,jdbcType=VARCHAR} ,
+
+		#{idCardNumber ,jdbcType=VARCHAR} ,
+
+		#{bankCardNumber ,jdbcType=VARCHAR},
+		
+		#{remark ,jdbcType=VARCHAR}
+
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO bank_card (
+
+		code ,
+
+		name ,
+
+		sex ,
+
+		id_card_number ,
+
+		bank_card_number,
+		
+		remark
+
+		)VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+
+			#{code ,jdbcType=VARCHAR} ,
+
+			#{name ,jdbcType=VARCHAR} ,
+
+			#{sex ,jdbcType=VARCHAR} ,
+
+			#{idCardNumber ,jdbcType=VARCHAR} ,
+
+			#{bankCardNumber ,jdbcType=VARCHAR},
+			
+			#{remark ,jdbcType=VARCHAR}
+
+			)
+		</foreach>
+
+	</insert>
+
+	<insert id="insertPartitive" parameterType="map">
+		INSERT INTO bank_card
+		(${fields._insertFields})
+		VALUES
+		(${fields._insertValues})
+	</insert>
+
+	<select id="read" parameterType="map"
+		resultType="com.siqisoft.bursar.bankcard.model.BankCard">
+		SELECT * FROM bank_card
+		WHERE
+
+		id = #{id[0]}
+
+	</select>
+
+	<select id="count" parameterType="map" resultType="int">
+		SELECT count(1) FROM bank_card
+		<if test="condition.expressions != null ">
+			<where>${condition.comboedExpressions}</where>
+		</if>
+	</select>
+
+	<select id="list" parameterType="map"
+		resultType="com.siqisoft.bursar.bankcard.model.BankCard">
+		SELECT * FROM bank_card
+		<if test="condition.expressions != null ">
+			<where>${condition.comboedExpressions}</where>
+		</if>
+		<if test="condition.orderBy != null">
+			${condition.orderBy}
+		</if>
+	</select>
+
+	<update id="update" parameterType="com.siqisoft.bursar.bankcard.model.BankCard">
+		UPDATE bank_card SET
+
+		code = #{code ,jdbcType=VARCHAR} ,
+
+		name = #{name ,jdbcType=VARCHAR} ,
+
+		sex = #{sex ,jdbcType=VARCHAR} ,
+
+		id_card_number = #{idCardNumber ,jdbcType=VARCHAR} ,
+
+		bank_card_number = #{bankCardNumber ,jdbcType=VARCHAR},
+		
+		remark = #{remark ,jdbcType=VARCHAR}
+
+		WHERE
+
+		id = #{id ,jdbcType=NUMERIC}
+
+	</update>
+
+	<update id="updatePartitive" parameterType="map">
+		UPDATE bank_card
+		SET ${fields._updateSql}
+		WHERE
+
+		id = #{id[0]}
+
+	</update>
+
+	<update id="updateBatch" parameterType="map">
+		UPDATE bank_card
+		SET ${fields._updateSql}
+		<if test="condition.expressions != null ">
+			<where> ${condition.comboedExpressions} </where>
+		</if>
+	</update>
+
+	<delete id="delete" parameterType="map">
+		DELETE FROM bank_card
+		WHERE
+
+		id = #{id[0]}
+
+	</delete>
+
+	<delete id="deleteBatch" parameterType="map">
+		DELETE FROM bank_card
+		<if test="condition.expressions != null ">
+			<where>${condition.comboedExpressions}</where>
+		</if>
+	</delete>
+
+</mapper>

@@ -1,0 +1,14 @@
+$(document).ready(function(){  
+	//给每个导航按钮设置响应
+    $("#indexNavBar").find("li").each(function(index,element){
+    	$(this).click(function(){
+    		//高亮显示当前
+    		$("#indexNavBar").find("li").removeClass("active");
+    		$(this).attr("class","active");
+    		//加载内容
+    		$("#workContainer").load($(this).attr("data-url"));
+    	});
+    });
+    //默认选中第一个导航按钮
+    $("#indexNavBar").find("a:first").trigger("click");
+});  

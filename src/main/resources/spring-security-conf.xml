@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro Security Config</description>
+
+	<!-- Shiro Filter -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login/Login.jsp" />
+		<property name="successUrl" value="/index.jsp" />
+		<property name="filterChainDefinitions">
+			<value>
+				/favicon.ico=anon
+				/logout/logout=logout
+				/include/**=anon
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="jdbcRealm" />
+		<property name="sessionManager" ref="sessionManager" />
+		<!-- property name="cacheManager" ref="shiroCacheManager" / -->
+	</bean>
+
+	<bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="innerDataSource" />
+		<property name="permissionsLookupEnabled" value="true" />
+		<property name="authenticationQuery"
+			value="select password from st_user where account = ? and enabled = true " />
+		<property name="userRolesQuery"
+			value="select ru.role_id from st_role_user ru , st_user u where ru.user_id = u.id and u.account = ? " />
+		<property name="permissionsQuery"
+			value="select ao.code||':'||ra.operation from st_role_auth ra , st_role r,st_auth_object ao where ra.role_id = r.id and ra.auth_object_id = ao.id and  cast ( r.id as varchar ) = ? " />
+	</bean>
+
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" value="${security.globalSessionTimeout}" />
+		<property name="sessionDAO" ref="sessionDAO" />
+	</bean>
+
+	<bean id="sessionDAO"
+		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+	</bean>
+
+	<!--bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
+		<property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml" 
+		/> </bean -->
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>
